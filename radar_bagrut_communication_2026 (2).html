@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>רדאר הבגרות 2026 - תקשורת וחברה</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Heebo & Rubik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+        }
+        h1, h2, h3, .font-title {
+            font-family: 'Rubik', sans-serif;
+        }
+        /* Custom scrollbar for beautiful dashboard */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* Custom animations for interactions */
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        }
+        .correct-answer-card {
+            animation: successPulse 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .wrong-answer-card {
+            animation: shake 0.4s ease-in-out;
+            border-color: #ef4444;
+        }
+        /* Card Flip Style for Game 5 */
+        .flashcard-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard-flipped {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- TOP HEADER -->
+    <header class="bg-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-50 transition-all">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <!-- Newspaper SVG Icon -->
+                <div class="bg-gradient-to-tr from-sky-500 to-indigo-600 p-2.5 rounded-xl shadow-md">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-white tracking-wide flex items-center gap-2">
+                        <span>רדאר הבגרות 2026</span>
+                        <span class="text-xs bg-indigo-500 text-white font-bold px-2 py-0.5 rounded-full">מיקוד תשפ"ו</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">תקשורת וחברה - משחקי שינון, הבנה ושליטה במושגים</p>
+                </div>
+            </div>
+
+            <!-- Global Readiness Score Tracker -->
+            <div class="flex items-center space-x-4 space-x-reverse mt-2 sm:mt-0">
+                <div class="text-right">
+                    <span class="text-xs text-slate-400 block font-medium">מדד מוכנות כללי</span>
+                    <span id="readiness-percent" class="text-lg font-bold text-sky-400">0%</span>
+                </div>
+                <div class="w-24 sm:w-32 bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="readiness-bar" class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <button onclick="showReportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-md">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <span>דוח מוכנות</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP WRAPPER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- SIDEBAR / DASHBOARD & SCOREBOARD -->
+        <aside class="lg:col-span-1 flex flex-col gap-4">
+            
+            <!-- Welcome Card -->
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-100 mb-2">שלום תלמיד/ה! 👋</h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                    כדי להצליח בבגרות בתקשורת וחברה, חשוב לא רק לשנן את הגדרות המושגים אלא גם לדעת לזהות אותם בסיטואציות ובשאלות יישום.
+                </p>
+                <div class="bg-slate-900 rounded-xl p-3 border border-slate-700">
+                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>תשובות נכונות:</span>
+                        <span id="score-correct" class="font-bold text-emerald-400">0</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <span>מושגים שנשאלו:</span>
+                        <span id="score-total" class="font-bold text-sky-400">0 / 37</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Selector Navigation -->
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-sm">
+                <h4 class="text-sm font-bold text-slate-400 mb-3 uppercase tracking-wider">בחרו משחק למידה:</h4>
+                <div class="flex flex-col gap-2">
+                    
+                    <button onclick="switchGame('matching')" id="nav-matching" class="game-nav-btn w-full text-right p-3 rounded-xl transition-all border flex items-center justify-between group bg-slate-750 border-slate-700 hover:bg-slate-700">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <span class="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg group-hover:bg-indigo-500/30 transition-colors">🧩</span>
+                            <div>
+                                <span class="font-bold text-sm block text-white">1. פיצוח ההגדרה</span>
+                                <span class="text-[10px] text-slate-400 block">התאמת מושג להגדרתו</span>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-slate-300">←</span>
+                    </button>
+
+                    <button onclick="switchGame('sorting')" id="nav-sorting" class="game-nav-btn w-full text-right p-3 rounded-xl transition-all border flex items-center justify-between group bg-slate-750 border-slate-700 hover:bg-slate-700">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <span class="p-2 bg-sky-500/20 text-sky-400 rounded-lg group-hover:bg-sky-500/30 transition-colors">📥</span>
+                            <div>
+                                <span class="font-bold text-sm block text-white">2. שער המיון</span>
+                                <span class="text-[10px] text-slate-400 block">חלוקת דוגמאות לקטגוריות</span>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-slate-300">←</span>
+                    </button>
+
+                    <button onclick="switchGame('trivia')" id="nav-trivia" class="game-nav-btn w-full text-right p-3 rounded-xl transition-all border flex items-center justify-between group bg-slate-750 border-slate-700 hover:bg-slate-700">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <span class="p-2 bg-pink-500/20 text-pink-400 rounded-lg group-hover:bg-pink-500/30 transition-colors">🎯</span>
+                            <div>
+                                <span class="font-bold text-sm block text-white">3. טריוויית הבגרות</span>
+                                <span class="text-[10px] text-slate-400 block">שאלות רב-ברירה ויישום</span>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-slate-300">←</span>
+                    </button>
+
+                    <button onclick="switchGame('factfake')" id="nav-factfake" class="game-nav-btn w-full text-right p-3 rounded-xl transition-all border flex items-center justify-between group bg-slate-750 border-slate-700 hover:bg-slate-700">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <span class="p-2 bg-amber-500/20 text-amber-400 rounded-lg group-hover:bg-amber-500/30 transition-colors">🛡️</span>
+                            <div>
+                                <span class="font-bold text-sm block text-white">4. נכון או פייק?</span>
+                                <span class="text-[10px] text-slate-400 block">קביעות מהירות של אמת ושקר</span>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-slate-300">←</span>
+                    </button>
+
+                    <button onclick="switchGame('flashcard')" id="nav-flashcard" class="game-nav-btn w-full text-right p-3 rounded-xl transition-all border flex items-center justify-between group bg-slate-750 border-slate-700 hover:bg-slate-700">
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <span class="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg group-hover:bg-emerald-500/30 transition-colors">🗂️</span>
+                            <div>
+                                <span class="font-bold text-sm block text-white">5. קלפי שינון (בעל פה)</span>
+                                <span class="text-[10px] text-slate-400 block">שינון בעל פה: על וחדשות</span>
+                            </div>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-slate-300">←</span>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Flashcard / Rapid Study helper inside sidebar -->
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-sm flex-grow">
+                <h4 class="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">פינת השינון המהיר 💡</h4>
+                <div id="quick-tip-box" class="bg-slate-900 rounded-xl p-3 border border-slate-800 text-xs">
+                    <p class="font-bold text-indigo-400 mb-1" id="quick-tip-title">זכות הציבור לדעת</p>
+                    <p class="text-slate-300 leading-relaxed" id="quick-tip-desc">זכותו של כל אזרח במדינה דמוקרטית לקבל מידע המצוי בידי הממשל והמנהל הציבורי או הנוגע לפעולתם. המידע שייך לאזרחים ולא לממשל.</p>
+                </div>
+                <button onclick="nextQuickTip()" class="w-full text-center text-xs text-sky-400 font-bold mt-2 hover:text-sky-300 transition-colors">החלף מושג לשינון ←</button>
+            </div>
+        </aside>
+
+        <!-- GAME CONTAINER (3/4 width) -->
+        <section class="lg:col-span-3 flex flex-col gap-6">
+            
+            <!-- ACTIVE GAME WINDOW -->
+            <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 shadow-xl flex-grow flex flex-col justify-between min-h-[450px] relative overflow-hidden">
+                
+                <!-- Feedback Overlay Box (For Celebrations or corrections) -->
+                <div id="feedback-overlay" class="hidden absolute inset-0 bg-slate-900/95 z-40 flex flex-col items-center justify-center p-6 text-center transition-all duration-300">
+                    <div id="feedback-icon-container" class="mb-4 text-6xl">🎉</div>
+                    <h3 id="feedback-title" class="text-2xl font-black mb-2 text-white">סקופ ענק!</h3>
+                    <div id="feedback-message" class="text-sm max-w-lg leading-relaxed text-slate-300 mb-6"></div>
+                    <button onclick="closeFeedback()" class="bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg transform transition active:scale-95 text-sm">
+                        המשך לאתגר הבא! ←
+                    </button>
+                </div>
+
+                <!-- Game Header Info -->
+                <div class="flex items-center justify-between border-b border-slate-700 pb-4 mb-4">
+                    <div>
+                        <span id="game-badge" class="text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full border border-indigo-500/20">משחק 1</span>
+                        <h2 id="game-title" class="text-xl md:text-2xl font-black mt-1 text-white">פיצוח ההגדרה</h2>
+                    </div>
+                    <!-- Small game status tracking -->
+                    <div class="flex items-center space-x-2 space-x-reverse text-xs text-slate-400 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-slate-700">
+                        <span>השלב הנוכחי:</span>
+                        <span id="game-stage" class="font-bold text-white">1/5</span>
+                    </div>
+                </div>
+
+                <!-- GAME BOARD INNER: SWAPPED DYNAMICALLY BY JS -->
+                <div id="game-board-container" class="flex-grow flex flex-col justify-center">
+                    <!-- Dynamic game elements injected here -->
+                </div>
+
+                <!-- Game Footer Buttons / Controls -->
+                <div class="mt-6 pt-4 border-t border-slate-700 flex flex-wrap items-center justify-between gap-3">
+                    <p id="game-instruction" class="text-xs text-indigo-300 font-medium">התאימו כל מושג מימין להגדרה המדויקת שלו משמאל.</p>
+                    <div class="flex space-x-2 space-x-reverse">
+                        <button onclick="skipRound()" class="bg-slate-700 hover:bg-slate-650 text-slate-300 text-xs font-bold px-3 py-2 rounded-lg transition-colors">דלג על השלב</button>
+                        <button onclick="resetCurrentGame()" class="bg-slate-900 text-slate-400 hover:text-slate-300 text-xs font-bold px-3 py-2 rounded-lg transition-colors border border-slate-700">התחל משחק מחדש</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pro Tips & Quick Reference -->
+            <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-md grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex items-start space-x-3 space-x-reverse">
+                    <span class="text-2xl mt-0.5">🎓</span>
+                    <div>
+                        <h5 class="text-xs font-bold text-slate-200">למידה מבוססת מיקוד</h5>
+                        <p class="text-[10px] text-slate-400 leading-relaxed mt-0.5">כל המושגים, ההגדרות והחלוקות מותאמים במדויק לחומר הבגרות המעודכן לתשפ"ו 2026.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3 space-x-reverse">
+                    <span class="text-2xl mt-0.5">🔬</span>
+                    <div>
+                        <h5 class="text-xs font-bold text-slate-200">שינון ממוקד שגיאות</h5>
+                        <p class="text-[10px] text-slate-400 leading-relaxed mt-0.5">כל טעות שתעשו נרשמת בדוח המוכנות כדי שתוכלו לחזור בדיוק על המושגים החלשים.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3 space-x-reverse">
+                    <span class="text-2xl mt-0.5">🎯</span>
+                    <div>
+                        <h5 class="text-xs font-bold text-slate-200">אינטגרציה של דוגמאות</h5>
+                        <p class="text-[10px] text-slate-400 leading-relaxed mt-0.5">שאלות הטריוויה והמיון כוללות מקרים אקטואליים שיופיעו בשאלות הבגרות שלכם.</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- REPORT / READINESS MODAL -->
+    <div id="report-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col justify-between shadow-2xl">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <span class="text-3xl">📊</span>
+                    <div>
+                        <h3 class="text-xl font-black text-white">דוח מוכנות לבגרות - תקשורת וחברה</h3>
+                        <p class="text-xs text-slate-400">מעקב אחר רמת השליטה האישית שלך בחומר הלימוד</p>
+                    </div>
+                </div>
+                <button onclick="closeReportModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6">
+                
+                <!-- Readiness Score Banner -->
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-center md:text-right">
+                        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">ציון מוכנות משוער:</span>
+                        <h4 id="report-readiness-title" class="text-4xl font-black text-sky-400 mt-1">לא החל עדיין</h4>
+                        <p id="report-readiness-comment" class="text-xs text-slate-300 mt-1">פתרו שאלות ומשחקים כדי לבנות את מדד המוכנות שלכם.</p>
+                    </div>
+                    <div class="relative w-28 h-28 flex items-center justify-center">
+                        <!-- SVG Circular Progress Bar -->
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="56" cy="56" r="48" stroke="#334155" stroke-width="8" fill="transparent" />
+                            <circle id="report-circle-bar" cx="56" cy="56" r="48" stroke="#38bdf8" stroke-width="8" fill="transparent" stroke-dasharray="301.6" stroke-dashoffset="301.6" class="transition-all duration-1000" />
+                        </svg>
+                        <span id="report-circle-text" class="absolute text-xl font-bold text-white">0%</span>
+                    </div>
+                </div>
+
+                <!-- Concept Knowledge Breakdown Lists -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- Strong Concepts -->
+                    <div class="bg-emerald-950/30 border border-emerald-900/50 rounded-2xl p-4">
+                        <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-1.5 mb-3">
+                            <span>✅</span>
+                            <span>מושגים חזקים (שליטה טובה)</span>
+                        </h4>
+                        <ul id="report-strong-list" class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
+                            <!-- Injected dynamically -->
+                            <span class="text-xs text-slate-400 italic">אין עדיין מושגים חזקים. ענו נכון במשחקים!</span>
+                        </ul>
+                    </div>
+
+                    <!-- Weak Concepts needing practice -->
+                    <div class="bg-rose-950/30 border border-rose-900/50 rounded-2xl p-4">
+                        <h4 class="text-sm font-bold text-rose-400 flex items-center gap-1.5 mb-3">
+                            <span>⚠️</span>
+                            <span>דורש חזרה ושינון</span>
+                        </h4>
+                        <ul id="report-weak-list" class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
+                            <!-- Injected dynamically -->
+                            <span class="text-xs text-slate-400 italic">לא נרשמו טעויות עדיין. המשיכו כך!</span>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Micro-learning Review Section (Shows actual definitions of weak concepts) -->
+                <div id="report-review-box" class="hidden bg-slate-900 border border-slate-700 rounded-2xl p-4">
+                    <h4 class="text-xs font-black text-indigo-400 uppercase tracking-wider mb-3">מדריך שינון מותאם אישית:</h4>
+                    <div id="report-review-items" class="flex flex-col gap-4">
+                        <!-- Injected review card dynamically -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-slate-700 flex justify-end">
+                <button onclick="closeReportModal()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-6 py-2 rounded-xl text-sm transition-colors">
+                    סגור חלון
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER INFO -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 - רדאר הבגרות בתקשורת וחברה. נבנה על פי המיקוד הרשמי של משרד החינוך לתשפ"ו.</p>
+        </div>
+    </footer>
+
+    <!-- JS CODE (Game mechanics, Concept DB, Interactions) -->
+    <script>
+        const CONCEPT_DB = [
+            {
+                id: "expression_freedom",
+                concept: "חופש הביטוי",
+                category: "זירת העל",
+                definition: "הזכות שניתנת לאזרח במדינה דמוקרטית לפרסם ובכך לחלוק עם אחרים, בכתב, בקול או בתמונה את מחשבותיו, עמדותיו ורגשותיו באופן חופשי ומבלי שיוטלו על כך הגבלות שרירותיות.",
+                details: "חיוני לקיומו של 'שוק דעות' ומשתלב עם זכות הציבור לדעת. הצדקותיו (לפי מיל): גילוי האמת, מימוש עצמי, הבטחת הדמוקרטיה והשגת יציבות חברתית."
+            },
+            {
+                id: "public_right_to_know",
+                concept: "זכות הציבור לדעת",
+                category: "זירת העל",
+                definition: "הזכות לקבל מידע המצוי בידי הממשל והמנהל הציבורי או הנוגע לפעולתם (חופש המידע). המידע שייך לאזרחים ולא לממשל שעובד עבורם.",
+                details: "זהו הערך שמוביל את עבודת העיתונאי ומאפשר להתנגד לנסיונות צנזורה."
+            },
+            {
+                id: "press_freedom",
+                concept: "חופש העיתונות",
+                category: "זירת העל",
+                definition: "פעילות חופשית של התקשורת, ללא תלות והתערבות השלטון, כדי שתוכל לבצע את תפקיד השמירה על הדמוקרטיה (כרשות רביעית), כולל ביקורת על השלטון ופרסום דעות שונות.",
+                details: "מאויים בעיקר ע\"י התערבות פוליטית או שיקולים מסחריים."
+            },
+            {
+                id: "open_ideas_market",
+                concept: "שוק דעות פתוח",
+                category: "זירת העל",
+                definition: "התפיסה הרעיונית שמניחה שאיש אינו יודע מה הדרך הנכונה, ולכן יש לתת לכולם להשמיע עמדה בצורה חופשית ורציונלית, ולנסות לשכנע בשוק חופשי. הדעה שתשכנע היא כנראה הנכונה זמנית.",
+                details: "הרשתות החברתיות כיום משפיעות עליו מאוד אך גם מקצינות ומחלקות את השיח הציבורי."
+            },
+            {
+                id: "fourth_estate",
+                concept: "רשות רביעית",
+                category: "זירת העל",
+                definition: "התקשורת כגוף שמקשר בין שלוש הרשויות (המבצעת, המחוקקת והשופטת) לבין האזרחים, שתפקידה לחקור את הרשויות, להפוך אותן לשקופות ולבקר אותן כדי למנוע שחיתות.",
+                details: "מנוגדת לתקשורת מגויסת. גורמים מפריעים: יחסי הון-שלטון-תקשורת, בעלות צולבת, ריכוזיות ומסחור."
+            },
+            {
+                id: "investigative_journalism",
+                concept: "עיתונות חוקרת",
+                category: "זירת העל + זירה 3",
+                definition: "ז'אנר עיתונאי שבו עובדים עם מקורות ראשוניים כדי לגלות מידע שמישהו (לרוב השלטון או בעלי כוח) מעוניין להסתיר מהציבור, במטרה להשפיע על סדר היום ולעצב את גבולות המוסר.",
+                details: "מצריך משאבים רבים וזמן, בשונה מעבודה עיתונאית מהירה וכפופה לדד-ליין. דוגמה: פרשת ווטרגייט."
+            },
+            {
+                id: "capital_power_media",
+                concept: "יחסי הון-שלטון-תקשורת",
+                category: "זירת העל",
+                definition: "משולש האינטרסים והקשרים בין בעלי הון ותאגידים, פוליטיקאים ומפלגות, וגופי תקשורת. יוצר תלות הדדית שעלולה להוביל לעיוות בסיקור, הסתרת שחיתות ופגיעה באינטרס הציבורי.",
+                details: "השלטון משפיע ברגולציה, ההון רוצה יצירת עוד הון, והתקשורת צריכה את שניהם לצורך מימון וקיום."
+            },
+            {
+                id: "public_trust",
+                concept: "אמון הציבור בתקשורת",
+                category: "זירת העל",
+                definition: "מושג שמייצג מצב בו האזרחים סומכים על מוסד התקשורת, ומאמינים שהיא פועלת באחריות, יושרה ולמען הציבור.",
+                details: "אמון נמוך מהווה סכנה לדמוקרטיה מכיוון שלאזרחים אין תמונה משותפת ואמינה של המציאות."
+            },
+            {
+                id: "journalism_ethics",
+                concept: "אתיקה עיתונאית",
+                category: "זירת העל",
+                definition: "עקרונות התנהגות פרופסיונאליים ומקצועיים (כמו נאמנות לאמת, בדיקת עובדות, תיקון טעויות, הגנה על פרטיות, מניעת ניגוד עניינים וחיסיון עיתונאי) שנוסחו ואוכפים ע\"י מועצת העיתונות.",
+                details: "אלו כללים שהתקשורת קבעה בעצמה ואוכפת בעצמה כדי לשמור על מקצועיות והגינות. מבוסס על קוד האתיקה (נפ\"ט ב\"ת ח\"ן)."
+            },
+            {
+                id: "post_truth",
+                concept: "פוסט-אמת",
+                category: "זירת העל",
+                definition: "מצב שבו קשה להבחין בין אמת לשקר עקב ריבוי מידע ופייק ניוז, והשיח הציבורי מתמקד בפנייה לרגשות ואמונות אישיות במקום בעובדות אובייקטיביות.",
+                details: "גורם לקיטוב עמוק ולפגיעה בדמוקרטיה מכיוון שאין הסכמה בסיסית על מהי המציאות."
+            },
+            {
+                id: "fake_news",
+                concept: "פייק ניוז",
+                category: "זירת העל",
+                definition: "ידיעות בדויות המפיצות מידע שגוי ותעמולתי באמצעי התקשורת וברשתות, המפורסמות בכוונה תחילה לשם הטעייה, מניפולציה או רווח פוליטי/כלכלי.",
+                details: "אינו טעות או רשלנות עיתונאית אלא זיוף מכוון. פוגע באמון ובשוק הדעות."
+            },
+            {
+                id: "social_responsibility",
+                concept: "תקשורת ואחריות חברתית",
+                category: "זירת העל",
+                definition: "מצב שבו התקשורת בוחרת להטיל על עצמה מגבלות מסוימות (למשל הימנעות משידור תכני בידור או סרטוני חטופים בזמן חירום) מתוך מחויבות לחברה, גם אם החוק אינו מחייב זאת.",
+                details: "בא לידי ביטוי מובהק במצבי חירום כגון מלחמת 'חרבות ברזל' שבה התקשורת מוותרת על רווחים ורייטינג לטובת החברה."
+            },
+            {
+                id: "mobilized_media",
+                concept: "תקשורת מגויסת",
+                category: "זירת העל",
+                definition: "מצב שבו התקשורת משרתת את מטרות השלטון ומציגה את המציאות מנקודת מבטו, בין אם בכפייה (מדינות דיקטטוריות) או מרצון (במצבי חירום כמו מלחמה).",
+                details: "מנוגדת לתפקיד הרשות הרביעית. האזרחים חושבים שהם מקבלים מידע אובייקטיבי אך בפועל זו הבנייה מטעם השלטון."
+            },
+            {
+                id: "ideological_hegemony",
+                concept: "הגמוניה אידיאולוגית/תרבותית",
+                category: "זירת העל",
+                definition: "שליטה של קבוצה דומיננטית אחת על קבוצות אחרות בחברה באמצעות תרבות ואידיאולוגיה (יצירת קונצנזוס והסכמה מרצון) ולא באמצעות כוח פיזי, כשהתקשורת משמשת כלי מרכזי לשכפול השלטון הזה.",
+                details: "גורמת לקבוצות המוחלשות לאמץ השקפת עולם שמנוגדת לאינטרסים שלהן, מתוך מחשבה שזו הדרך הטבעית והיחידה."
+            },
+            {
+                id: "agenda_setting",
+                concept: "תיאוריית קביעת סדר יום",
+                category: "זירת העל",
+                definition: "תיאוריה הטוענת שלתקשורת ההמונים השפעה רבה והיא קובעת מהן הסוגיות החשובות שמעסיקות את הציבור, בהן יש לדון או לטפל על ידי הבלטת נושאים.",
+                details: "התקשורת לא אומרת לאנשים *מה לחשוב*, אלא *על מה לחשוב*. סדרי היום המשפיעים הם: סדר יום פוליטי, סדר יום תקשורתי וסדר יום ציבורי."
+            },
+            {
+                id: "reality_social_construction",
+                concept: "הבניה חברתית של המציאות",
+                category: "זירת העל + זירה 3",
+                definition: "התפיסה שהתקשורת אינה משקפת את המציאות באופן אובייקטיבי, אלא מעצבת ומבנה תמונת מציאות מסוימת בראשם של האזרחים בהתאם לאינטרסים ושיקולים של יוצריה.",
+                details: "נעשה באמצעות כמות הדיווח (כמה מראים), הבעת עמדה (איך מראים) והדגשה או הסתרה של נושאים (מה מראים ומה לא)."
+            },
+            {
+                id: "commercial_media",
+                concept: "תקשורת מסחרית",
+                category: "זירת העל",
+                definition: "גופי שידור (רדיו וטלוויזיה) בבעלות פרטית, שמימונם מבוסס בעיקר על פרסומות וחסויות, ומטרתם המרכזית היא השגת רווח כלכלי באמצעות מקסום רייטינג.",
+                details: "נוטה להציע תכנים בידוריים המכוונים למכנה המשותף הנמוך ביותר."
+            },
+            {
+                id: "public_broadcasting",
+                concept: "תקשורת ציבורית / שידור ציבורי",
+                category: "זירת העל",
+                definition: "גופי שידור בבעלות ובפיקוח ציבורי, הממומנים מכספי הציבור (כגון תקציב מדינה), ומטרתם לשרת את כלל האזרחים תוך שמירה על פלורליזם ואינטרס ציבורי.",
+                details: "משוחררים מלחצי רייטינג ופרסומות, אך חשופים לעיתים ללחצים ואיומי קיצוץ מצד השלטון הפוליטי."
+            },
+            {
+                id: "semiotic_fiske_model",
+                concept: "מודל תרבותי-סמיוטי (פיסק)",
+                category: "זירה 1",
+                definition: "מודל המתאר את התקשורת כאינטראקציה והחלפת משמעויות, בה המוען והנמען שווי ערך, והבנת המסר תלויה לחלוטין בהקשר ובמאפייני הנמען.",
+                details: "מנוגד למודל לאסוול הלינארי והפסיבי. הנמען כאן אקטיבי ומייצר משמעות משל עצמו לטקסט."
+            },
+            {
+                id: "media_roles",
+                concept: "תפקידי התקשורת",
+                category: "זירה 1",
+                definition: "חמשת התפקידים המרכזיים שהתקשורת ממלאת בחברה: סיקור הסביבה, תיאום (פרשנות), המשכיות (חינוך והעברת מורשת), בידור, וגיוס (סולידריות בחירום).",
+                details: "טקסט בודד יכול למלא מספר תפקידים במקביל (למשל ספורט כבידור וגיוס)."
+            },
+            {
+                id: "globalization",
+                concept: "גלובליזציה",
+                category: "זירה 2",
+                definition: "תהליך כלל-עולמי המאפשר מעבר חופשי ומהיר של מידע, רעיונות, סחורות ואנשים ללא מגבלת גבולות לאומיים, תוך יצירת כפר גלובלי והאחדת תרבויות.",
+                details: "נשלטת בעיקר ע\"י תאגידי ענק מערביים/אמריקאיים, מה שעלול להחליש את התרבות המקומית."
+            },
+            {
+                id: "localization",
+                concept: "לוקליזציה",
+                category: "זירה 2",
+                definition: "תהליך הפוך לגלובליזציה, המתמקד ביצירת תכנים תקשורתיים המדגישים היבטים, ערכים ושפה מקומיים-ייחודיים כדי לשמר את התרבות המקומית ולחזק את הזהות הלאומית.",
+                details: "דוגמה: הפקות מקור ישראליות בעברית (לפי חוק הרשות השנייה מ-1993)."
+            },
+            {
+                id: "newsworthiness",
+                concept: "ערך חדשותי",
+                category: "זירה 3",
+                definition: "התקשורת לא יכולה לסקר את כל האירועים שמתרחשים במציאות ולכן היא 'מסננת' את האירועים לפי ערך חדשותי - אירוע שלתקשורת 'שווה' לדווח עליו.",
+                details: "נקבע לפי 6 קריטריונים: חשיבות, רלוונטיות, ייחודיות, אישיות מפורסמת, עניין אנושי, ועדכניות."
+            },
+            {
+                id: "center_periphery",
+                concept: "תיאוריית מרכז ופריפריה",
+                category: "זירה 3",
+                definition: "תיאוריה המצביעה על יחסי כוח לא שוויוניים: המרכז מחזיק בכוח הפוליטי והכלכלי והתקשורת ממוקמת בו, ולכן היא מסקרת את הפריפריה החלשה מנקודת מבטה - לרוב בצורה שלילית.",
+                details: "הפריפריה אינה רק גיאוגרפית, אלא חברתית-כלכלית (למשל דרום תל אביב)."
+            },
+            {
+                id: "denotation_connotation",
+                concept: "דנוטציה וקונוטציה",
+                category: "זירה 3 + זירה 7",
+                definition: "מודל לניתוח מסר חזותי: דנוטציה היא התיאור האובייקטיבי והראשוני של מה שרואים פיזית בתמונה; קונוטציה היא הפרשנות, הרגש והמשמעויות החברתיות-תרבותיות שמתעוררות אצל הצופה.",
+                details: "מיתוס נוצר כאשר קונוטציה מסוימת הופכת לכל כך מוסכמת עד שהיא נתפסת כעובדה טבעית."
+            },
+            {
+                id: "gatekeeper_advocate",
+                concept: "עיתונאי שומר סף לעומת פרקליט",
+                category: "זירה 3",
+                definition: "שני מודלים מנוגדים של תפקיד העיתונאי: שומר סף שואף לניטרליות ואובייקטיביות; עיתונאי פרקליט מביע עמדה ופועל לשינוי חברתי ולייצוג קבוצות מוחלשות.",
+                details: "שומר סף כותב בגוף שלישי ומפריד בין דעה לעובדה; פרקליט כותב בגוף ראשון ומכוון את הקהל."
+            },
+            {
+                id: "independent_press",
+                concept: "עיתונות עצמאית",
+                category: "זירה 3",
+                definition: "עיתונאים בודדים או ארגוני תקשורת עצמאיים, שאינם חלק מארגון תקשורת גדול, ממומנים על ידי תרומות הציבור ופועלים ללא הטיות.",
+                details: "פועלים הודות לרשתות החברתיות והאינטרנט ומאפשרים עבודה שקופה. דוגמה: 'שומרים'."
+            },
+            {
+                id: "satire",
+                concept: "סאטירה",
+                category: "זירה 4",
+                definition: "אמצעי להעברת ביקורת חברתית ופוליטית נוקבת נגד הממסד באמצעות הומור מוגזם, לעג והקצנה.",
+                details: "משרתת את האזרחים ככלי לביקורת ופריקת מתח, אך משרתת לעיתים גם את השלטון."
+            },
+            {
+                id: "digital_natives_immigrants",
+                concept: "ילידים דיגיטליים לעומת מהגרים דיגיטליים",
+                category: "זירה 5",
+                definition: "חלוקה של משתמשי טכנולוגיה: ילידים (נולדו אחרי 1980, מיומנים בטכנולוגיה כשפת אם, מולטי-טאסקינג) לעומת מהגרים (נולדו לפני 1980, מתקשים וצריכים ללמוד טכנולוגיה).",
+                details: "מייצר פער דיגיטלי שיכול להעמיק או לצמצם פערים חברתיים-כלכליים."
+            },
+            {
+                id: "network_stars",
+                concept: "אושיות רשת",
+                category: "זירה 5",
+                definition: "אנשים שכוחם והשפעתם על דעת הקהל נובעים ישירות ממספר העוקבים שלהם ברשתות החברתיות, ללא צורך בתיווך או סינון של תקשורת ממוסדת.",
+                details: "נתפסים כאמינים ונגישים יותר, אך פועלים ללא בקרה אתית ומקיימים לעיתים שיתופי פעולה סמויים."
+            },
+            {
+                id: "social_networks",
+                concept: "רשתות חברתיות",
+                category: "זירה 5",
+                definition: "פלטפורמות דיגיטליות המבוססות על תוכן גולשים, המאופיינות בהיברידיות וזרימת מידע אופקית (הקהל הוא גם המוען וגם הנמען).",
+                details: "מקלות על ארגון מחאות ונגישות מידע, אך נשלטות ע\"י תאגידי ענק ואלגוריתמים המעצימים קיטוב."
+            },
+            {
+                id: "socialization",
+                concept: "תהליך החברות",
+                category: "זירה 5",
+                definition: "תהליך מתמשך שבו האדם לומד ומפנים את הערכים, הנורמות וההתנהגויות המקובלות בחברה שלו כדי להפוך לחלק ממנה ולתפקד בה בהצלחה.",
+                details: "התקשורת היא סוכן חברות קבוע ויציב המטמיע נורמות (מראה, מגדר, זהות) דרך הנאה וחזרתיות."
+            },
+            {
+                id: "ai_media",
+                concept: "בינה מלאכותית",
+                category: "זירה 5",
+                definition: "מערכות מחשב המבוססות על אלגוריתמים המדמים חשיבה אנושית לצורך פתרון בעיות, קבלת החלטות, וביצוע משימות תקשורתיות (עריכה, הפקה, וכתיבת ידיעות).",
+                details: "מייעלת את העבודה, אך מעלה סכנות של פגיעה בדמוקרטיה, אובדן פרטיות והחלפת עובדים אנושיים."
+            },
+            {
+                id: "deep_fake",
+                concept: "דיפ-פייק",
+                category: "זירה 5",
+                definition: "טכנולוגיית בינה מלאכותית המאפשרת לחבר קול ותמונה משני מקורות שונים ליצירת סרטון מזויף שנראה ונשמע אמיתי לחלוטין באופן שכמעט בלתי ניתן לזיהוי.",
+                details: "חלק מתופעת טשטוש הגבולות בין אמת לבדיה, המאיימת על יציבות הדמוקרטיה ואמון הציבור."
+            },
+            {
+                id: "uses_gratifications",
+                concept: "גישת השימושים והסיפוקים",
+                category: "זירה 6 + 7 + 8",
+                definition: "תיאוריה הטוענת כי הקהל הוא אקטיבי, מודע לצרכיו ובוחר להשתמש בתקשורת באופן מבוקר כדי לספק ארבעה צרכים: שכליים (קוגניטיביים), רגשיים, חברתיים, ואסקפיסטיים (בריחה).",
+                details: "מנוגדת להנחת ההגמוניה (שבה התקשורת חזקה ומעצבת את הקהל הפסיבי). כאן הכוח מיוחס לקהל."
+            },
+            {
+                id: "media_event",
+                concept: "אירוע מדיה",
+                category: "זירה 8",
+                definition: "אירוע ענק, מתוכנן מראש, המשודר בשידור חי בטלוויזיה ובאינטרנט, המושך קהל עצום ומאחד את הציבור לקהילה אחת בעלת שותפות גורל (כגון מונדיאל).",
+                details: "נדיר וחד-פעמי, גורם להפסקת שידורים רגילים ומחזק סולידריות לאומית."
+            },
+            {
+                id: "rating",
+                concept: "רייטינג",
+                category: "זירה 9",
+                definition: "מדד שיעורי צפייה המבטא את אחוז האוכלוסייה שצפה בתוכנית מסוימת ברצועת זמן מוגדרת. נמדד בישראל באמצעות מכשיר הפיפל-מיטר.",
+                details: "קובע ישירות את מחירי הפרסום בתקשורת המסחרית (רייטינג גבוה = מחיר גבוה)."
+            },
+            {
+                id: "advertising_campaigns",
+                concept: "קמפיין פרסום מסחרי וחברתי",
+                category: "זירה 9",
+                definition: "מסחרי: הפצת מידע על מוצר או שירות למטרת רווח כלכלי; חברתי: הפצת מידע לטובת הציבור במטרה ליצור שינוי חברתי ללא מטרת רווח (ע\"י עמותות או משרדי ממשלה).",
+                details: "קמפיין מסחרי משתמש בפנייה שכלית או רגשית. קמפיין חברתי מתקשה להשיג שינוי לבדו."
+            },
+            {
+                id: "sponsored_content",
+                concept: "תוכן ממומן",
+                category: "זירה 9",
+                definition: "שילוב מכוון של מסרים מסחריים ומוצרים בתוך תכני מדיה (כגון ריאליטי או תוכניות בוקר) תמורת תשלום, מבלי להצהיר בגלוי ובאופן בולט שמדובר בפרסומת.",
+                details: "נועד להטמיע את המוצר בתת-מודע של הצופה ולעקוף מנגנוני הגנה."
+            }
+        ];
+
+        let userStats = {
+            correctCount: 0,
+            incorrectCount: 0,
+            strongConcepts: new Set(),
+            weakConcepts: new Set(),
+            completedStages: {
+                matching: 1,
+                sorting: 1,
+                trivia: 1,
+                factfake: 1,
+                flashcard: 1
+            }
+        };
+
+        // Celebrations praise phrases
+        const praisePhrases = [
+            { title: "סקופ היסטרי! 🗞️", msg: "עברת את שומרי הסף בקלות. ההגדרה פוצחה בהצלחה!" },
+            { title: "רייטינג שיא! 📈", msg: "הקהל מרותק למסכים. תשובה מדוייקת ביותר!" },
+            { title: "כתבה פותחת מהדורה! 📺", msg: "איזו רמת הבנה! אתם לגמרי מוכנים לבגרות." },
+            { title: "עורכת החדשות מוחאת כפיים! 👏", msg: "תשובה מעולה שמדגימה שליטה מצוינת במושג." },
+            { title: "הויראליות בשמיים! 🚀", msg: "שוק הדעות מגיב בהתלהבות רבה לתשובה שלכם." }
+        ];
+
+        // Matching Pairs dynamic cache
+        let matchingPairs = [];
+        let selectedConceptId = null;
+        let selectedDefinitionId = null;
+
+        // Sorting Game active data
+        const sortingItems = [
+            { text: "שידור משחק גמר המונדיאל בשידור חי בטלוויזיה המושך מיליוני צופים ברחבי העולם באותה השעה.", category: "אירוע מדיה", conceptId: "media_event" },
+            { text: "דמות בתוכנית 'הישרדות' שמציינת במהלך השידור שהשמפו של 'פינוק' הוא פשוט נפלא.", category: "תוכן ממומן", conceptId: "sponsored_content" },
+            { text: "ערוץ 12 או 13 הממומנים בעיקר ממכירת זמן לפרסומות וחסויות, המכוונים להשגת רייטינג מקסימלי.", category: "תקשורת מסחרית", conceptId: "commercial_media" },
+            { text: "תאגיד 'כאן 11' הממומן מכספי הציבור ומציע תכנים פלורליסטיים ואיכותיים ללא מטרת רווח.", category: "תקשורת ציבורית / שידור ציבורי", conceptId: "public_broadcasting" },
+            { text: "עיתונאי שמדווח בגוף שלישי, נמנע לחלוטין מהבעת דעתו האישית ומציג רק את העובדות המלאות לציבור.", category: "עיתונאי שומר סף לעומת פרקליט", conceptId: "gatekeeper_advocate" },
+            { text: "עיתונאי שמדווח בגוף ראשון, מביע עמדה ברורה ופועל במרץ לשינוי המציאות וייצוג הקבוצה המוחלשת.", category: "עיתונאי שומר סף לעומת פרקליט", conceptId: "gatekeeper_advocate" },
+            { text: "סרטון פוליטי המציג מנהיג אומר דברים שמעולם לא אמר, שיוצר על ידי אלגוריתם בינה מלאכותית מתקדם.", category: "דיפ-פייק", conceptId: "deep_fake" },
+            { text: "סיקור הפגנות סוערות בפריפריה באופן שלילי המדגיש אלימות ופשע, לעומת סיקור חיובי למפגני המרכז.", category: "תיאוריית מרכז ופריפריה", conceptId: "center_periphery" },
+            { text: "בחורה בת 19 המשתמשת ברשתות חברתיות רבות במקביל, שולחת הודעות, שומעת פודקאסט ורואה סרטון.", category: "ילידים דיגיטליים לעומת מהגרים דיגיטליים", conceptId: "digital_natives_immigrants" },
+            { text: "התקשורת המסחרית בישראל בוחרת שלא לשדר סרטוני חטופים שהפיץ חמאס, למרות ערכם החדשותי הגבוה.", category: "תקשורת ואחריות חברתית", conceptId: "social_responsibility" },
+            { text: "הצנזורה הצבאית בישראל פוסלת ידיעה ביטחונית מחשש שתסכן את שלום האזרחים.", category: "חופש הביטוי", conceptId: "expression_freedom" }
+        ];
+        let currentSortingIndex = 0;
+
+        const triviaQuestions = [
+            {
+                q: "ג'ון סטיוארט מיל מציע 4 טיעונים מוסריים בזכות חופש הביטוי. איזה מהבאים אינו אחד מהם?",
+                options: [
+                    "אמצעי להפחתת המיסים והתערבות המדינה בשוק החופשי לקניית ערוצי תקשורת.",
+                    "אמצעי לגילוי האמת - שמיעת יותר דעות מבררת את חקר האמת.",
+                    "אמצעי למימוש עצמי של האדם להתפתח ולהתקדם.",
+                    "אמצעי להבטחת הדמוקרטיה והשפעה של העם על השלטון."
+                ],
+                correct: 0,
+                rationale: "ארבע ההצדקות של מיל הן: גילוי האמת, מימוש עצמי, הבטחת הדמוקרטיה, והשגת יציבות חברתית. אין קשר להפחתת מיסים או רכישת ערוצים.",
+                conceptId: "expression_freedom"
+            },
+            {
+                q: "בזמן מלחמת 'חרבות ברזל', הערוצים המסחריים שידרו ברצף שבוע שלם ללא פרסומות ונמנעו משידור תוכניות בידור. איזה מושג מתאר התנהגות זו?",
+                options: [
+                    "תקשורת ואחריות חברתית",
+                    "הגמוניה אידיאולוגית",
+                    "פוסט-אמת",
+                    "רשתות חברתיות"
+                ],
+                correct: 0,
+                rationale: "תקשורת ואחריות חברתית מתארת מצב שבו התקשורת מרצונה מטילה על עצמה מגבלות (וויתור על רווחים ורייטינג) לטובת החברה במצבי חירום.",
+                conceptId: "social_responsibility"
+            },
+            {
+                q: "מהו ההבדל המרכזי בין 'פייק ניוז' לבין פרסום ידיעה מוטעית ברשת בעקבות רשלנות עיתונאית רגילה?",
+                options: [
+                    "בפייק ניוז מדובר בפרסום מידע מזויף בכוונה תחילה לשם הטעייה ותעמולה, ולא בטעות מקרית.",
+                    "פייק ניוז מפורסם רק ברשתות חברתיות ולא מופיע לעולם באמצעי תקשורת ממסדיים.",
+                    "רשלנות עיתונאית רגילה אינה כפופה לאמון הציבור, בעוד שפייק ניוז נהנה מאמון גבוה של הציבור.",
+                    "פייק ניוז מותר על פי חוקי חופש הביטוי בישראל, בעוד שרשלנות עיתונאית אסורה לחלוטין."
+                ],
+                correct: 0,
+                rationale: "פייק ניוז מוגדר כידיעות בדויות המופצות במטרה להטעות ולשמש תעמולה בכוונה תחילה, להבדיל מפרסום מוטעה בשוגג.",
+                conceptId: "fake_news"
+            },
+            {
+                q: "לפי תיאוריית מרכז ופריפריה, מדוע סיקור קבוצות בפריפריה יהיה לרוב יותר שלילי וידגיש פשע והזנחה?",
+                options: [
+                    "מכיוון שהתקשורת היא חלק מהמרכז והיא מסקרת את הסביבה מנקודת המבט שלו, תוך מרחק אידיאולוגי מהפריפריה.",
+                    "מכיוון שהאנשים בפריפריה אינם משלמים על צריכת חדשות ולכן עורכי החדשות מענישים אותם בסיקור שלילי.",
+                    "כי אין אירועים חשובים בפריפריה מלבד פלילים, ולכן אין אפשרות לדווח עליהם אחרת.",
+                    "מכיוון שהצנזורה הצבאית מחייבת לסקר את המרכז בצורה חיובית בלבד כדי לשמור על המורל הלאומי."
+                ],
+                correct: 0,
+                rationale: "התקשורת ממוקמת פיזית ותרבותית במרכז הכוח, ולכן היא מסקרת את הפריפריה מנקודת מבטה המנוכרת, מה שיוצר סיקור מוטה ושלילי.",
+                conceptId: "center_periphery"
+            },
+            {
+                q: "מהו 'מיתוס' על פי מודל בארת' לניתוח דימויים חזותיים בתקשורת?",
+                options: [
+                    "מצב שבו משמעות קונוטטיבית (רמת הפרשנות השנייה) הופכת למוסכמת ונתפסת כאמת טבעית בלתי ניתנת לערעור.",
+                    "סיפורי עם עתיקים שמשודרים בערוצי המדע וההיסטוריה כדי למשוך רייטינג קבוע.",
+                    "ההגדרה האובייקטיבית והברורה של מה שאנו רואים פיזית בתמונה כגון צבעים וזוויות.",
+                    "תמונה דיגיטלית שרוססה בגרפיטי כדי לבקר פוליטיקאים ברשות הרביעית."
+                ],
+                correct: 0,
+                rationale: "מיתוס נוצר כשמשמעות קונוטטיבית ותרבותית מוטמעת עמוק בחברה עד שהיא נחשבת מובנת מאליה ומדמה מציאות אובייקטיבית.",
+                conceptId: "denotation_connotation"
+            },
+            {
+                q: "מהי הסכנה העיקרית של 'תקשורת מגויסת' בדמוקרטיה, במיוחד בזמנים שהיא מתגייסת מרצון?",
+                options: [
+                    "שהאזרחים חושבים שהם מקבלים מידע אובייקטיבי אך בפועל מקבלים הבנייה חברתית המשרתת את השלטון.",
+                    "שהתקשורת מרוויחה סכומי כסף מופקעים על חשבון המפרסמים המסחריים והאזרחים.",
+                    "שהרגולציה של מועצת העיתונות מתבטלת לצמיתות ומועברת לידי צה\"ל והצנזורה הצבאית.",
+                    "שהיא מעבירה את הקהל למצב של ילידים דיגיטליים המזניחים את שוק הדעות הפתוח."
+                ],
+                correct: 0,
+                rationale: "בגלל שהמידע מגיע מגופים עיתונאיים ולא ישירות משלטי תעמולה של השלטון, האזרח מאמין לו בלי לדעת שהוא צורך תמונה מעוצבת מטעם הממסד.",
+                conceptId: "mobilized_media"
+            }
+        ];
+        let currentTriviaIndex = 0;
+
+        // Fact or Fake active data (Removed symbolic annihilation completely)
+        const factFakeItems = [
+            { text: "חופש הביטוי בישראל הוא זכות מוחלטת ואינו יכול להיות מוגבל בשום אופן, גם לא במקרים של ביטחון המדינה.", isFact: false, explanation: "חופש הביטוי אינו מוחלט. במקרים קיצוניים שבהם יש סכנה לביטחון המדינה, לשם הטעייה, לשם הטוב או לפרטיות, הוא מוגבל על ידי החוק והצנזורה.", conceptId: "expression_freedom" },
+            { text: "על פי מודל פיסק הסמיוטי-תרבותי, המוען והנמען הם שווי ערך והמסר מקבל משמעויות שונות בהתאם להקשר ולנמען.", isFact: true, explanation: "נכון מאוד! בניגוד למודלים לינאריים, מודל פיסק רואה בנמען גורם אקטיבי המפרש את המסר על פי נסיבות חייו וגילו.", conceptId: "semiotic_fiske_model" },
+            { text: "פרסום סמוי (תוכן ממומן) נועד להטמיע בתת מודע של הצופה את המוצר או הלוגו מבלי שיפעיל את מנגנוני ההגנה הרגילים שלו מפני פרסומות.", isFact: true, explanation: "נכון! הפרסום הסמוי שותל מוצרים בתוך תוכן מערכתי (כמו ריאליטי) כך שהצרכן אינו מזהה שזו פרסומת ומאמץ את המסר בלי להתגונן.", conceptId: "sponsored_content" },
+            { text: "ההבדל בין ילידים דיגיטליים למהגרים דיגיטליים הוא שהילידים נולדו לפני שנת 1980 ומעדיפים מסמכים מודפסים ועיתונים.", isFact: false, explanation: "הפוך! ילידים דיגיטליים נולדו אחרי 1980, והטכנולוגיה היא שפת האם שלהם. מהגרים דיגיטליים נולדו לפני 1980.", conceptId: "digital_natives_immigrants" },
+            { text: "יחסי הון-שלטון-תקשורת מתארים משולש אינטרסים המשרת בעיקר את אזרחי המדינה ומגן עליהם מפני מונופולים ושחיתות פוליטית.", isFact: false, explanation: "טעות חמורה! קשרים אלו עלולים לעוות את תפקוד המוסדות ולפגוע באזרחים על ידי הסתרת שחיתויות ועידוד מונופולים לטובת המקורבים.", conceptId: "capital_power_media" }
+        ];
+        let currentFactFakeIndex = 0;
+
+        // Flashcards Memorization Game Data (Arena 'על' and 'חדשות/זירה 3')
+        const flashcardConceptIds = [
+            "ai_media", "agenda_setting", "social_responsibility", "mobilized_media", 
+            "reality_social_construction", "fourth_estate", "expression_freedom", 
+            "journalism_ethics", "independent_press", "open_ideas_market", 
+            "capital_power_media", "public_broadcasting", "fake_news", "post_truth"
+        ];
+        let currentFlashcardIndex = 0;
+        let isFlashcardFlipped = false;
+
+        // UI references
+        const gameBoardContainer = document.getElementById('game-board-container');
+        const gameTitle = document.getElementById('game-title');
+        const gameBadge = document.getElementById('game-badge');
+        const gameStage = document.getElementById('game-stage');
+        const gameInstruction = document.getElementById('game-instruction');
+        const scoreCorrect = document.getElementById('score-correct');
+        const scoreTotal = document.getElementById('score-total');
+        const readinessPercent = document.getElementById('readiness-percent');
+        const readinessBar = document.getElementById('readiness-bar');
+
+        // Feedback references
+        const feedbackOverlay = document.getElementById('feedback-overlay');
+        const feedbackIconContainer = document.getElementById('feedback-icon-container');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackMessage = document.getElementById('feedback-message');
+
+        // Quick tip references
+        const quickTipTitle = document.getElementById('quick-tip-title');
+        const quickTipDesc = document.getElementById('quick-tip-desc');
+        let currentTipIndex = 0;
+
+        // Active matched concepts pool to prevent repetitions in the matching game
+        let matchedConceptIdsInSession = new Set();
+
+        window.onload = function() {
+            updateQuickTip();
+            switchGame('matching');
+            updateStatsUI();
+        }
+
+        function nextQuickTip() {
+            currentTipIndex = (currentTipIndex + 1) % CONCEPT_DB.length;
+            updateQuickTip();
+        }
+
+        function updateQuickTip() {
+            const concept = CONCEPT_DB[currentTipIndex];
+            quickTipTitle.innerText = concept.concept;
+            quickTipDesc.innerText = concept.definition;
+        }
+
+        function switchGame(gameType) {
+            currentGame = gameType;
+            
+            // Highlight sidebar button
+            document.querySelectorAll('.game-nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'border-indigo-500', 'text-white');
+                btn.classList.add('bg-slate-750', 'border-slate-700');
+            });
+
+            const activeBtn = document.getElementById(`nav-${gameType}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-750', 'border-slate-700');
+                activeBtn.classList.add('bg-indigo-600', 'border-indigo-500', 'text-white');
+            }
+
+            closeFeedback();
+
+            // Setup active window elements
+            if (gameType === 'matching') {
+                gameBadge.innerText = "משחק 1";
+                gameTitle.innerText = "פיצוח ההגדרה";
+                gameInstruction.innerText = "התאימו כל מושג מימין להגדרה המדויקת שלו משמאל. מושגים שנפתרו נעלמים מהסבב!";
+                gameStage.innerText = `${userStats.completedStages.matching}/5`;
+                initMatchingGame();
+            } else if (gameType === 'sorting') {
+                gameBadge.innerText = "משחק 2";
+                gameTitle.innerText = "שער המיון (Sorting Box)";
+                gameInstruction.innerText = "מיינו את המצב המוצג מטה למושג הנכון על ידי לחיצה על הכפתור המתאים.";
+                gameStage.innerText = `${userStats.completedStages.sorting}/10`;
+                initSortingGame();
+            } else if (gameType === 'trivia') {
+                gameBadge.innerText = "משחק 3";
+                gameTitle.innerText = "טריוויית הבגרות";
+                gameInstruction.innerText = "קראו את שאלת היישום הבאה ובחרו את התשובה המדויקת ביותר מבין האפשרויות.";
+                gameStage.innerText = `${userStats.completedStages.trivia}/6`;
+                initTriviaGame();
+            } else if (gameType === 'factfake') {
+                gameBadge.innerText = "משחק 4";
+                gameTitle.innerText = "נכון או פייק?";
+                gameInstruction.innerText = "קבעו במהירות האם ההיגד המוצג הוא נכון מבחינה לימודית (Fact) או פייק (Fake).";
+                gameStage.innerText = `${userStats.completedStages.factfake}/6`;
+                initFactFakeGame();
+            } else if (gameType === 'flashcard') {
+                gameBadge.innerText = "משחק 5";
+                gameTitle.innerText = "קלפי שינון לזכירה בעל פה";
+                gameInstruction.innerText = "קראו את המושג, נסו לשנן את הגדרתו המלאה בעל פה, לחצו 'חשוף הגדרה' והעריכו את השליטה שלכם!";
+                gameStage.innerText = `${userStats.completedStages.flashcard}/${flashcardConceptIds.length}`;
+                initFlashcardGame();
+            }
+        }
+
+        function triggerFeedback(isCorrect, title, message, currentConceptId) {
+            feedbackOverlay.classList.remove('hidden');
+            
+            if (isCorrect) {
+                const praise = praisePhrases[Math.floor(Math.random() * praisePhrases.length)];
+                feedbackIconContainer.innerText = "🎉";
+                feedbackTitle.innerText = praise.title;
+                feedbackTitle.className = "text-2xl font-black mb-2 text-emerald-400";
+                feedbackMessage.innerHTML = `<span class="font-bold text-white text-base">${title}:</span><br/>${praise.msg}<br/><br/><p class="text-xs bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-300">${message}</p>`;
+                
+                userStats.correctCount++;
+                if (currentConceptId) {
+                    userStats.strongConcepts.add(currentConceptId);
+                    userStats.weakConcepts.delete(currentConceptId);
+                }
+            } else {
+                feedbackIconContainer.innerText = "❌";
+                feedbackTitle.innerText = "פספוס קל... הנה התיקון:";
+                feedbackTitle.className = "text-2xl font-black mb-2 text-rose-400";
+                feedbackMessage.innerHTML = `<span class="font-bold text-white text-base">${title}:</span><br/>${message}`;
+                
+                userStats.incorrectCount++;
+                if (currentConceptId) {
+                    userStats.weakConcepts.add(currentConceptId);
+                }
+            }
+
+            updateStatsUI();
+        }
+
+        function closeFeedback() {
+            feedbackOverlay.classList.add('hidden');
+        }
+
+        function skipRound() {
+            closeFeedback();
+            if (currentGame === 'matching') {
+                userStats.completedStages.matching = (userStats.completedStages.matching % 5) + 1;
+                gameStage.innerText = `${userStats.completedStages.matching}/5`;
+                initMatchingGame();
+            } else if (currentGame === 'sorting') {
+                currentSortingIndex = (currentSortingIndex + 1) % sortingItems.length;
+                userStats.completedStages.sorting = (userStats.completedStages.sorting % 10) + 1;
+                gameStage.innerText = `${userStats.completedStages.sorting}/10`;
+                initSortingGame();
+            } else if (currentGame === 'trivia') {
+                currentTriviaIndex = (currentTriviaIndex + 1) % triviaQuestions.length;
+                userStats.completedStages.trivia = (userStats.completedStages.trivia % 6) + 1;
+                gameStage.innerText = `${userStats.completedStages.trivia}/6`;
+                initTriviaGame();
+            } else if (currentGame === 'factfake') {
+                currentFactFakeIndex = (currentFactFakeIndex + 1) % factFakeItems.length;
+                userStats.completedStages.factfake = (userStats.completedStages.factfake % 6) + 1;
+                gameStage.innerText = `${userStats.completedStages.factfake}/6`;
+                initFactFakeGame();
+            } else if (currentGame === 'flashcard') {
+                currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcardConceptIds.length;
+                userStats.completedStages.flashcard = (userStats.completedStages.flashcard % flashcardConceptIds.length) + 1;
+                gameStage.innerText = `${userStats.completedStages.flashcard}/${flashcardConceptIds.length}`;
+                initFlashcardGame();
+            }
+        }
+
+        function resetCurrentGame() {
+            closeFeedback();
+            if (currentGame === 'matching') {
+                matchedConceptIdsInSession.clear();
+                userStats.completedStages.matching = 1;
+                gameStage.innerText = "1/5";
+                initMatchingGame();
+            } else if (currentGame === 'sorting') {
+                currentSortingIndex = 0;
+                userStats.completedStages.sorting = 1;
+                gameStage.innerText = "1/10";
+                initSortingGame();
+            } else if (currentGame === 'trivia') {
+                currentTriviaIndex = 0;
+                userStats.completedStages.trivia = 1;
+                gameStage.innerText = "1/6";
+                initTriviaGame();
+            } else if (currentGame === 'factfake') {
+                currentFactFakeIndex = 0;
+                userStats.completedStages.factfake = 1;
+                gameStage.innerText = "1/6";
+                initFactFakeGame();
+            } else if (currentGame === 'flashcard') {
+                currentFlashcardIndex = 0;
+                userStats.completedStages.flashcard = 1;
+                gameStage.innerText = `1/${flashcardConceptIds.length}`;
+                initFlashcardGame();
+            }
+        }
+
+        function updateStatsUI() {
+            const correct = userStats.correctCount;
+            const incorrect = userStats.incorrectCount;
+            const totalAnswered = correct + incorrect;
+            
+            let calculatedPercent = 0;
+            if (totalAnswered > 0) {
+                calculatedPercent = Math.min(Math.round((userStats.strongConcepts.size / CONCEPT_DB.length) * 100), 100);
+            }
+
+            scoreCorrect.innerText = correct;
+            scoreTotal.innerText = `${userStats.strongConcepts.size} / ${CONCEPT_DB.length}`;
+            readinessPercent.innerText = `${calculatedPercent}%`;
+            readinessBar.style.width = `${calculatedPercent}%`;
+        }
+
+
+        // ==========================================
+        // GAME 1: MATCHING GAME CONTROLLER (non-repetition logic)
+        // ==========================================
+        function initMatchingGame() {
+            selectedConceptId = null;
+            selectedDefinitionId = null;
+
+            // Filter out concepts matched in this matching session to guarantee new terms
+            let availableConcepts = CONCEPT_DB.filter(c => !matchedConceptIdsInSession.has(c.id));
+            if (availableConcepts.length < 4) {
+                matchedConceptIdsInSession.clear();
+                availableConcepts = [...CONCEPT_DB];
+            }
+
+            let shuffled = availableConcepts.sort(() => 0.5 - Math.random());
+            let selectedConcepts = shuffled.slice(0, 4);
+
+            matchingPairs = selectedConcepts.map(c => ({ id: c.id, concept: c.concept, definition: c.definition }));
+
+            let conceptsCol = [...matchingPairs].sort(() => 0.5 - Math.random());
+            let definitionsCol = [...matchingPairs].sort(() => 0.5 - Math.random());
+
+            let html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
+                    <!-- Concepts Column (Right) -->
+                    <div class="flex flex-col gap-3">
+                        <h4 class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">בחרו מושג:</h4>
+                        ${conceptsCol.map(item => `
+                            <button id="concept-btn-${item.id}" onclick="selectConcept('${item.id}')" class="concept-match-card text-right p-4 bg-slate-900 hover:bg-slate-750 border border-slate-700 hover:border-indigo-500 rounded-2xl transition-all font-bold text-sm shadow-sm flex items-center justify-between">
+                                <span>${item.concept}</span>
+                                <span class="text-xs text-indigo-400 font-normal bg-indigo-500/10 px-2 py-0.5 rounded-full">לחצו לבחירה</span>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- Definitions Column (Left) -->
+                    <div class="flex flex-col gap-3">
+                        <h4 class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">בחרו את ההגדרה המתאימה:</h4>
+                        ${definitionsCol.map(item => `
+                            <button id="definition-btn-${item.id}" onclick="selectDefinition('${item.id}')" class="definition-match-card text-right p-3.5 bg-slate-900 hover:bg-slate-750 border border-slate-700 hover:border-sky-500 rounded-2xl transition-all text-xs leading-relaxed text-slate-300">
+                                ${item.definition}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            gameBoardContainer.innerHTML = html;
+        }
+
+        function selectConcept(id) {
+            if (selectedConceptId) {
+                const prev = document.getElementById(`concept-btn-${selectedConceptId}`);
+                if (prev) prev.className = prev.className.replace(' border-indigo-500 bg-indigo-950/40', ' border-slate-700 bg-slate-900');
+            }
+
+            selectedConceptId = id;
+            const current = document.getElementById(`concept-btn-${id}`);
+            if (current) current.className += ' border-indigo-500 bg-indigo-950/40';
+
+            checkMatch();
+        }
+
+        function selectDefinition(id) {
+            if (selectedDefinitionId) {
+                const prev = document.getElementById(`definition-btn-${selectedDefinitionId}`);
+                if (prev) prev.className = prev.className.replace(' border-sky-500 bg-sky-950/40', ' border-slate-700 bg-slate-900');
+            }
+
+            selectedDefinitionId = id;
+            const current = document.getElementById(`definition-btn-${id}`);
+            if (current) current.className += ' border-sky-500 bg-sky-950/40';
+
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (selectedConceptId && selectedDefinitionId) {
+                const conceptCard = document.getElementById(`concept-btn-${selectedConceptId}`);
+                const definitionCard = document.getElementById(`definition-btn-${selectedDefinitionId}`);
+
+                if (selectedConceptId === selectedDefinitionId) {
+                    conceptCard.className = conceptCard.className.replace('border-indigo-500 bg-indigo-950/40', 'border-emerald-500 bg-emerald-950/30 text-emerald-400 pointer-events-none');
+                    definitionCard.className = definitionCard.className.replace('border-sky-500 bg-sky-950/40', 'border-emerald-500 bg-emerald-950/30 text-emerald-300 pointer-events-none');
+                    
+                    conceptCard.classList.add('correct-answer-card');
+                    definitionCard.classList.add('correct-answer-card');
+
+                    const conceptObj = CONCEPT_DB.find(c => c.id === selectedConceptId);
+                    userStats.strongConcepts.add(selectedConceptId);
+                    matchedConceptIdsInSession.add(selectedConceptId); // cache solved ID
+                    userStats.correctCount++;
+                    updateStatsUI();
+
+                    matchingPairs = matchingPairs.filter(p => p.id !== selectedConceptId);
+
+                    if (matchingPairs.length === 0) {
+                        setTimeout(() => {
+                            triggerFeedback(true, conceptObj.concept, `הצלחת לחבר את כל זוגות ההגדרות בשלב זה!<br/><br/><b>הסבר המיקוד:</b> ${conceptObj.definition}`, selectedConceptId);
+                            userStats.completedStages.matching = (userStats.completedStages.matching % 5) + 1;
+                            gameStage.innerText = `${userStats.completedStages.matching}/5`;
+                            initMatchingGame();
+                        }, 600);
+                    } else {
+                        selectedConceptId = null;
+                        selectedDefinitionId = null;
+                    }
+
+                } else {
+                    conceptCard.classList.add('wrong-answer-card');
+                    definitionCard.classList.add('wrong-answer-card');
+
+                    const conceptObj = CONCEPT_DB.find(c => c.id === selectedConceptId);
+                    const wrongConceptObj = CONCEPT_DB.find(c => c.id === selectedDefinitionId);
+
+                    setTimeout(() => {
+                        triggerFeedback(false, conceptObj.concept, `זיווג שגוי. בחרת בהגדרה ששייכת למושג <b>"${wrongConceptObj.concept}"</b>.<br/><br/><b>ההגדרה הנכונה היא:</b><br/>${conceptObj.definition}`, selectedConceptId);
+                        
+                        conceptCard.className = conceptCard.className.replace(' border-indigo-500 bg-indigo-950/40', ' border-slate-700 bg-slate-900');
+                        conceptCard.classList.remove('wrong-answer-card');
+                        definitionCard.className = definitionCard.className.replace(' border-sky-500 bg-sky-950/40', ' border-slate-700 bg-slate-900');
+                        definitionCard.classList.remove('wrong-answer-card');
+
+                        selectedConceptId = null;
+                        selectedDefinitionId = null;
+                    }, 500);
+                }
+            }
+        }
+
+
+        // ==========================================
+        // GAME 2: SORTING GAME CONTROLLER
+        // ==========================================
+        function initSortingGame() {
+            const currentItem = sortingItems[currentSortingIndex];
+            
+            let categories = ["אירוע מדיה", "תוכן ממומן", "תקשורת מסחרית", "תקשורת ציבורית / שידור ציבורי", "עיתונאי שומר סף לעומת פרקליט", "דיפ-פייק", "תיאוריית מרכז ופריפריה", "ילידים דיגיטליים לעומת מהגרים דיגיטליים", "תקשורת ואחריות חברתית", "חופש הביטוי"];
+            
+            let correctCategory = currentItem.category;
+            let otherCategories = categories.filter(c => c !== correctCategory).sort(() => 0.5 - Math.random()).slice(0, 3);
+            let displayCategories = [correctCategory, ...otherCategories].sort(() => 0.5 - Math.random());
+
+            let html = `
+                <div class="p-2 flex flex-col gap-6 items-center">
+                    <div class="w-full bg-slate-900/80 border border-slate-700 rounded-2xl p-6 text-center shadow-inner relative">
+                        <span class="absolute top-3 right-4 text-xs font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full">מצב מהחיים / דוגמה עיתונאית</span>
+                        <p class="text-base font-medium leading-relaxed text-slate-100 mt-4 px-2">
+                            "${currentItem.text}"
+                        </p>
+                    </div>
+
+                    <div class="w-full">
+                        <h4 class="text-xs font-bold text-slate-400 mb-3 text-right uppercase tracking-wider">בחרו לאיזה מושג/קטגוריה המצב משתייך:</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                            ${displayCategories.map(cat => `
+                                <button onclick="sortItem('${cat}')" class="w-full text-right p-4 bg-slate-900 hover:bg-indigo-950/30 border border-slate-700 hover:border-indigo-500 rounded-xl font-bold text-sm transition-all shadow-sm">
+                                    📥 &nbsp; ${cat}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            gameBoardContainer.innerHTML = html;
+        }
+
+        function sortItem(chosenCategory) {
+            const currentItem = sortingItems[currentSortingIndex];
+            const isCorrect = chosenCategory === currentItem.category;
+            const conceptObj = CONCEPT_DB.find(c => c.id === currentItem.conceptId) || { concept: currentItem.category, definition: "ההגדרה של מושג זה מבוססת על המיקוד." };
+
+            if (isCorrect) {
+                triggerFeedback(true, conceptObj.concept, `זיהית מצוין! הדוגמה מתארת במדויק את המושג <b>"${conceptObj.concept}"</b>.<br/><br/><b>הגדרת המיקוד:</b> ${conceptObj.definition}`, currentItem.conceptId);
+            } else {
+                triggerFeedback(false, conceptObj.concept, `זה לא המיון הנכון. בחרת במושג "${chosenCategory}".<br/><br/>הסיטואציה מתארת במדויק את המושג <b>"${conceptObj.concept}"</b>.<br/><br/><b>הגדרת המיקוד:</b> ${conceptObj.definition}`, currentItem.conceptId);
+            }
+
+            currentSortingIndex = (currentSortingIndex + 1) % sortingItems.length;
+            userStats.completedStages.sorting = (userStats.completedStages.sorting % 10) + 1;
+            gameStage.innerText = `${userStats.completedStages.sorting}/10`;
+            initSortingGame();
+        }
+
+
+        // ==========================================
+        // GAME 3: TRIVIA GAME CONTROLLER
+        // ==========================================
+        function initTriviaGame() {
+            const currentItem = triviaQuestions[currentTriviaIndex];
+
+            let html = `
+                <div class="p-2 flex flex-col gap-6">
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-inner">
+                        <span class="text-[10px] font-bold uppercase tracking-wider bg-pink-500/10 text-pink-400 px-2 py-0.5 rounded-full">שאלה רב-ברירה</span>
+                        <h4 class="text-base font-bold text-slate-100 mt-2 leading-relaxed">
+                            ${currentItem.q}
+                        </h4>
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        ${currentItem.options.map((option, index) => `
+                            <button onclick="answerTrivia(${index})" class="text-right p-4 bg-slate-900 hover:bg-slate-750 border border-slate-700 hover:border-pink-500 rounded-xl text-xs md:text-sm leading-relaxed text-slate-300 transition-all shadow-sm flex items-start space-x-3 space-x-reverse group">
+                                <span class="bg-slate-800 text-slate-400 font-bold px-2 py-1 rounded-md text-[10px] uppercase group-hover:bg-pink-500 group-hover:text-white transition-colors">${String.fromCharCode(65 + index)}</span>
+                                <span class="flex-1 mt-0.5">${option}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            gameBoardContainer.innerHTML = html;
+        }
+
+        function answerTrivia(index) {
+            const currentItem = triviaQuestions[currentTriviaIndex];
+            const isCorrect = index === currentItem.correct;
+            const conceptObj = CONCEPT_DB.find(c => c.id === currentItem.conceptId) || { concept: "מושג תקשורתי", definition: "ראו את הגדרתו המלאה של המושג בבגרות." };
+
+            if (isCorrect) {
+                triggerFeedback(true, conceptObj.concept, `מצוין! בחרת בתשובה הנכונה.<br/><br/><b>הרציונל:</b> ${currentItem.rationale}`, currentItem.conceptId);
+            } else {
+                triggerFeedback(false, conceptObj.concept, `תשובה לא נכונה. התשובה הנכונה הייתה: <b>${currentItem.options[currentItem.correct]}</b>.<br/><br/><b>הרציונל:</b> ${currentItem.rationale}`, currentItem.conceptId);
+            }
+
+            currentTriviaIndex = (currentTriviaIndex + 1) % triviaQuestions.length;
+            userStats.completedStages.trivia = (userStats.completedStages.trivia % 6) + 1;
+            gameStage.innerText = `${userStats.completedStages.trivia}/6`;
+            initTriviaGame();
+        }
+
+
+        // ==========================================
+        // GAME 4: FACT OR FAKE CONTROLLER
+        // ==========================================
+        function initFactFakeGame() {
+            const currentItem = factFakeItems[currentFactFakeIndex];
+
+            let html = `
+                <div class="p-2 flex flex-col gap-6 items-center justify-center">
+                    <div class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center shadow-inner min-h-[140px] flex flex-col justify-center items-center">
+                        <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full border border-amber-500/20 mb-3">בחן את ההיגד</span>
+                        <p class="text-lg font-bold leading-relaxed text-slate-100">
+                            "${currentItem.text}"
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+                        <button onclick="chooseFactFake(true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-2xl shadow-lg transform transition active:scale-95 text-base flex flex-col items-center gap-1">
+                            <span class="text-2xl">🛡️</span>
+                            <span>נכון (Fact)</span>
+                        </button>
+                        <button onclick="chooseFactFake(false)" class="bg-rose-600 hover:bg-rose-500 text-white font-black py-4 px-6 rounded-2xl shadow-lg transform transition active:scale-95 text-base flex flex-col items-center gap-1">
+                            <span class="text-2xl">⚠️</span>
+                            <span>פייק (Fake)</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            gameBoardContainer.innerHTML = html;
+        }
+
+        function chooseFactFake(userChoice) {
+            const currentItem = factFakeItems[currentFactFakeIndex];
+            const isCorrect = userChoice === currentItem.isFact;
+            const conceptObj = CONCEPT_DB.find(c => c.id === currentItem.conceptId) || { concept: "ההגדרה בבגרות" };
+
+            if (isCorrect) {
+                triggerFeedback(true, conceptObj.concept, `זיהיתם את האמת!<br/><br/><b>הסבר לימודי:</b> ${currentItem.explanation}`, currentItem.conceptId);
+            } else {
+                triggerFeedback(false, conceptObj.concept, `טעות זיהוי. ההיגד המקורי הוא <b>${currentItem.isFact ? 'נכון (Fact)' : 'פייק (Fake)'}</b>.<br/><br/><b>הסבר לימודי:</b> ${currentItem.explanation}`, currentItem.conceptId);
+            }
+
+            currentFactFakeIndex = (currentFactFakeIndex + 1) % factFakeItems.length;
+            userStats.completedStages.factfake = (userStats.completedStages.factfake % 6) + 1;
+            gameStage.innerText = `${userStats.completedStages.factfake}/6`;
+            initFactFakeGame();
+        }
+
+
+        // ==========================================
+        // GAME 5: FLASHCARD MEMORIZATION CONTROLLER (NEW MODE)
+        // ==========================================
+        function initFlashcardGame() {
+            const activeId = flashcardConceptIds[currentFlashcardIndex];
+            const conceptObj = CONCEPT_DB.find(c => c.id === activeId);
+
+            let html = `
+                <div class="p-2 flex flex-col gap-6 items-center">
+                    
+                    <!-- Flashcard Outer -->
+                    <div class="w-full max-w-lg bg-slate-900 border-2 ${isFlashcardFlipped ? 'border-emerald-500 bg-emerald-950/10' : 'border-slate-750 bg-slate-900'} rounded-3xl p-6 md:p-8 min-h-[220px] flex flex-col justify-between shadow-xl transition-all relative">
+                        
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20 mb-2 inline-block">
+                                ${conceptObj.category}
+                            </span>
+                            <h3 class="text-2xl md:text-3xl font-black text-white mt-1 mb-4">
+                                ${conceptObj.concept}
+                            </h3>
+                        </div>
+
+                        <!-- Card Content changes on flip state -->
+                        <div class="my-4">
+                            ${isFlashcardFlipped ? `
+                                <div class="text-right space-y-4 animate-fadeIn">
+                                    <div>
+                                        <span class="text-xs font-bold text-slate-400 block mb-1">הגדרה רשמית:</span>
+                                        <p class="text-sm md:text-base leading-relaxed text-slate-100 font-medium">
+                                            ${conceptObj.definition}
+                                        </p>
+                                    </div>
+                                    ${conceptObj.details ? `
+                                        <div>
+                                            <span class="text-xs font-bold text-indigo-400 block mb-1">דגשים והרחבה לבחינה:</span>
+                                            <p class="text-xs leading-relaxed text-slate-300">
+                                                ${conceptObj.details}
+                                            </p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : `
+                                <div class="text-center py-6 text-slate-400 italic text-sm">
+                                    נסו להיזכר בהגדרה המדויקת של המושג בעל פה, ואז לחצו על הכפתור מטה כדי לחשוף את ההגדרה ולבדוק את עצמכם!
+                                </div>
+                            `}
+                        </div>
+
+                        <!-- Reveal Button (Only shows if NOT flipped) -->
+                        ${!isFlashcardFlipped ? `
+                            <button onclick="flipFlashcard(true)" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-emerald-500/10 transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                                <span>הצג הגדרה רשמית</span>
+                                <span>👁️</span>
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- Evaluation Control Center (Only shows IF card IS flipped) -->
+                    ${isFlashcardFlipped ? `
+                        <div class="w-full max-w-lg bg-slate-850/80 border border-slate-700/60 rounded-2xl p-4 text-center animate-fadeIn">
+                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">איך שלטתם בהגדרה בעל פה?</h4>
+                            
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <button onclick="assessFlashcard('perfect', '${conceptObj.id}')" class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold py-2.5 px-1 rounded-xl text-xs md:text-sm transition-colors flex flex-col items-center gap-1">
+                                    <span>ידעתי מצוין!</span>
+                                    <span>✅</span>
+                                </button>
+                                <button onclick="assessFlashcard('partial', '${conceptObj.id}')" class="bg-amber-600/90 hover:bg-amber-500 text-white font-bold py-2.5 px-1 rounded-xl text-xs md:text-sm transition-colors flex flex-col items-center gap-1">
+                                    <span>ידעתי חלקית</span>
+                                    <span>⚠️</span>
+                                </button>
+                                <button onclick="assessFlashcard('fail', '${conceptObj.id}')" class="bg-rose-600/90 hover:bg-rose-500 text-white font-bold py-2.5 px-1 rounded-xl text-xs md:text-sm transition-colors flex flex-col items-center gap-1">
+                                    <span>לא ידעתי בכלל</span>
+                                    <span>❌</span>
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                </div>
+            `;
+            gameBoardContainer.innerHTML = html;
+        }
+
+        function flipFlashcard(flippedState) {
+            isFlashcardFlipped = flippedState;
+            initFlashcardGame();
+        }
+
+        function assessFlashcard(status, conceptId) {
+            const conceptObj = CONCEPT_DB.find(c => c.id === conceptId);
+            
+            if (status === 'perfect') {
+                userStats.strongConcepts.add(conceptId);
+                userStats.weakConcepts.delete(conceptId);
+                userStats.correctCount++;
+                
+                triggerFeedback(true, conceptObj.concept, `נהדר! השגת שליטה מלאה במושג לכרטיס הדוח שלך.<br/><br/><b>ההגדרה:</b> ${conceptObj.definition}`, conceptId);
+            } else if (status === 'partial') {
+                // Keep neutral, offer support
+                feedbackIconContainer.innerText = "⚠️";
+                feedbackTitle.innerText = "זכירה חלקית - מעולה לצבירת ביטחון!";
+                feedbackTitle.className = "text-2xl font-black mb-2 text-amber-400";
+                feedbackMessage.innerHTML = `<span class="font-bold text-white text-base">${conceptObj.concept}:</span><br/>המשך להתאמן! קרא פעם נוספת את ההגדרה המקורית כדי להגיע לשליטה מלאה ללא פערים:<br/><br/><p class="text-xs bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-300">${conceptObj.definition}</p>`;
+                feedbackOverlay.classList.remove('hidden');
+                
+                userStats.weakConcepts.add(conceptId); // keep practicing
+            } else {
+                userStats.weakConcepts.add(conceptId);
+                userStats.strongConcepts.delete(conceptId);
+                userStats.incorrectCount++;
+
+                triggerFeedback(false, conceptObj.concept, `לא נורא, לכן אנחנו פה! המושג נרשם בדוח המוכנות שלך לשינון מהיר.<br/><br/><b>הגדרה מדויקת לשינון בעל פה:</b><br/>${conceptObj.definition}`, conceptId);
+            }
+
+            // Move card state forward
+            isFlashcardFlipped = false;
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcardConceptIds.length;
+            userStats.completedStages.flashcard = (userStats.completedStages.flashcard % flashcardConceptIds.length) + 1;
+            gameStage.innerText = `${userStats.completedStages.flashcard}/${flashcardConceptIds.length}`;
+            
+            // Re-render next flashcard (behind feedback screen)
+            initFlashcardGame();
+        }
+
+
+        // ==========================================
+        // REPORT MODAL CONTROLLER
+        // ==========================================
+        function showReportModal() {
+            const modal = document.getElementById('report-modal');
+            modal.classList.remove('hidden');
+
+            const correct = userStats.correctCount;
+            const incorrect = userStats.incorrectCount;
+            const total = correct + incorrect;
+
+            let readinessVal = 0;
+            if (total > 0) {
+                readinessVal = Math.min(Math.round((userStats.strongConcepts.size / CONCEPT_DB.length) * 100), 100);
+            }
+
+            // Update Circle Bar
+            const circleBar = document.getElementById('report-circle-bar');
+            const circleText = document.getElementById('report-circle-text');
+            const circumference = 2 * Math.PI * 48; // 301.6
+            const offset = circumference - (readinessVal / 100) * circumference;
+            circleBar.style.strokeDashoffset = offset;
+            circleText.innerText = `${readinessVal}%`;
+
+            const reportTitle = document.getElementById('report-readiness-title');
+            const reportComment = document.getElementById('report-readiness-comment');
+            if (readinessVal === 0) {
+                reportTitle.innerText = "לא התחלת עדיין";
+                reportTitle.className = "text-3xl font-black text-slate-400 mt-1";
+                reportComment.innerText = "פתרו לפחות שאלה אחת או בצעו משימה במשחקים כדי להתחיל.";
+            } else if (readinessVal < 30) {
+                reportTitle.innerText = "מתחיל/ה בצעדים ראשונים";
+                reportTitle.className = "text-3xl font-black text-rose-400 mt-1";
+                reportComment.innerText = "רמת שליטה התחלתית. יש לעבור על עוד הגדרות ולבצע מיונים נוספים.";
+            } else if (readinessVal < 70) {
+                reportTitle.innerText = "בדרך הבטוחה לבגרות";
+                reportTitle.className = "text-3xl font-black text-amber-400 mt-1";
+                reportComment.innerText = "שליטה טובה בחלק נכבד מהמושגים! המשיכו לפתור כדי להשיג ציון מושלם.";
+            } else {
+                reportTitle.innerText = "מוכנות שיא לבגרות! 🎓";
+                reportTitle.className = "text-3xl font-black text-emerald-400 mt-1";
+                reportComment.innerText = "שליטה פנטסטית במושגי המיקוד! המשיכו לשמר את הידע עד הבגרות.";
+            }
+
+            const strongList = document.getElementById('report-strong-list');
+            if (userStats.strongConcepts.size === 0) {
+                strongList.innerHTML = `<span class="text-xs text-slate-400 italic">אין עדיין מושגים חזקים. ענו נכון במשחקים!</span>`;
+            } else {
+                strongList.innerHTML = Array.from(userStats.strongConcepts).map(id => {
+                    const c = CONCEPT_DB.find(item => item.id === id);
+                    return c ? `<li class="bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-xl px-2.5 py-1 text-xs font-semibold">${c.concept}</li>` : '';
+                }).join('');
+            }
+
+            const weakList = document.getElementById('report-weak-list');
+            const reviewBox = document.getElementById('report-review-box');
+            const reviewItemsContainer = document.getElementById('report-review-items');
+
+            if (userStats.weakConcepts.size === 0) {
+                weakList.innerHTML = `<span class="text-xs text-slate-400 italic">לא נרשמו טעויות עדיין. המשיכו כך!</span>`;
+                reviewBox.classList.add('hidden');
+            } else {
+                weakList.innerHTML = Array.from(userStats.weakConcepts).map(id => {
+                    const c = CONCEPT_DB.find(item => item.id === id);
+                    return c ? `<li class="bg-rose-950/40 text-rose-300 border border-rose-800/60 rounded-xl px-2.5 py-1 text-xs font-semibold">${c.concept}</li>` : '';
+                }).join('');
+
+                reviewBox.classList.remove('hidden');
+                reviewItemsContainer.innerHTML = Array.from(userStats.weakConcepts).map(id => {
+                    const c = CONCEPT_DB.find(item => item.id === id);
+                    return c ? `
+                        <div class="bg-slate-800 border-l-4 border-rose-500 rounded-xl p-3 shadow-sm text-xs">
+                            <h5 class="font-bold text-rose-300 text-sm mb-1">${c.concept} <span class="text-[10px] text-slate-400 font-normal">(${c.category})</span></h5>
+                            <p class="text-slate-200 mb-1.5"><span class="font-bold text-slate-400">הגדרה מדויקת:</span> ${c.definition}</p>
+                            ${c.details ? `<p class="text-slate-400"><span class="font-bold text-slate-500">דגשים לבגרות:</span> ${c.details}</p>` : ''}
+                        </div>
+                    ` : '';
+                }).join('');
+            }
+        }
+
+        function closeReportModal() {
+            document.getElementById('report-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
